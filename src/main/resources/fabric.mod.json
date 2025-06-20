@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "mockuimenu",
+  "version": "1.0.0",
+  "name": "MockUIMenu",
+  "description": "A mock UI menu",
+  "authors": [
+    "S42"
+  ],
+  "contact": {
+    "homepage": "http://s42.site",
+    "sources": ""
+  },
+  "license": "",
+  "icon": "assets/mockuimenu/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "tr.s42.mockuimenu.MockUIMenu"
+    ],
+    "client": [
+      "tr.s42.mockuimenu.client.MockUIMenuClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.5",
+    "java": ">=21",
+    "fabric-language-kotlin": ">=1.13.0",
+    "owo-lib": ">=0.12.0"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

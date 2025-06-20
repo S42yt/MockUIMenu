@@ -1,0 +1,22 @@
+[versions]
+minecraft = "1.21.5"
+yarnMappings = "1.21.5+build.1"
+fabricLoader = "0.16.14"
+fabricApi = "0.127.1+1.21.5"
+fabricKotlin = "1.13.3+kotlin.2.1.21"
+fabricLoom = "1.10.1"
+kotlinPlugin = "2.1.21"
+owo = "0.12.21+1.21.5"
+
+[libraries]
+mojang-minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
+fabric-yarn = { group = "net.fabricmc", name = "yarn", version.ref = "yarnMappings" }
+fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabricLoader" }
+fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabricApi" }
+fabric-language-kotlin = { group = "net.fabricmc", name = "fabric-language-kotlin", version.ref = "fabricKotlin" }
+owo-lib = { group = "io.wispforest", name = "owo-lib", version.ref = "owo" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinPlugin" }
+fabric-loom = { id = "fabric-loom", version.ref = "fabricLoom" }
+maven-publish = { id = "maven-publish" }
