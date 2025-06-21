@@ -16,10 +16,6 @@ repositories {
         name = "Wisp Forest"
         url = uri("https://maven.wispforest.io")
     }
-    maven {
-        name = "TerraformersMC"
-        url = uri("https://maven.terraformersmc.com/")
-    }
 }
 
 dependencies {
