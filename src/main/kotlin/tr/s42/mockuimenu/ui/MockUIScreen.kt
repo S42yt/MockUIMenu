@@ -9,6 +9,7 @@ import tr.s42.mockuimenu.ui.cardanimationmanager.CardAnimationManager
 import tr.s42.mockuimenu.ui.components.UIComponents
 import tr.s42.mockuimenu.ui.data.FeatureData
 import tr.s42.mockuimenu.ui.marqueemanager.MarqueeManager
+import kotlin.collections.fill
 
 class MockUIScreen : BaseOwoScreen<FlowLayout>() {
     override fun createAdapter(): OwoUIAdapter<FlowLayout> {
@@ -17,6 +18,7 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
 
     override fun build(rootComponent: FlowLayout) {
         rootComponent
+        rootComponent
             .surface(Surface.VANILLA_TRANSLUCENT)
             .horizontalAlignment(HorizontalAlignment.CENTER)
             .verticalAlignment(VerticalAlignment.CENTER)
@@ -24,7 +26,7 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
         val menuContainer = Containers.verticalFlow(Sizing.fill(55), Sizing.fill(80))
             .apply {
                 surface(Surface.flat(0x00000000))
-                padding(Insets.of(2))
+                padding(Insets.of(0))
             }
 
         val topBar = createTopBar()
@@ -35,10 +37,12 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
         val scrollContainer = Containers.verticalScroll(Sizing.fill(100), Sizing.fill(70), gridContainer)
             .apply {
                 surface(Surface.flat(0x00000000))
-                padding(Insets.of(5))
+                padding(Insets.of(0))
                 scrollbar(ScrollContainer.Scrollbar.flat(Color.ofArgb(0xCCFFFFFF.toInt())))
-                margins(Insets.vertical(5))
+                margins(Insets.of(0))
+                zIndex(10)
             }
+
         menuContainer.child(scrollContainer)
 
         val bottomBar = createBottomBar()
@@ -51,7 +55,7 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
     private fun createMainGrid(): FlowLayout {
         val gridContainer = Containers.verticalFlow(Sizing.fill(100), Sizing.content())
             .apply {
-                surface(Surface.flat(0x70FFFFFF))
+                surface(Surface.flat(0x50FFFFFF))
                 padding(Insets.of(10))
             }
 
@@ -81,7 +85,7 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
     private fun createTopBar(): FlowLayout {
         val topBar = Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
             .apply {
-                surface(Surface.flat(0x33000000))
+                surface(Surface.flat(0x20555555))
                 padding(Insets.of(15))
                 verticalAlignment(VerticalAlignment.CENTER)
             }
@@ -90,9 +94,9 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
             child(UIComponents.createSearchBar(Sizing.fill(50)))
             child(Containers.horizontalFlow(Sizing.fill(10), Sizing.content()))
             child(UIComponents.createIconButton("☰"))
-            child(UIComponents.createTextButton("PVP").margins(Insets.left(8)))
-            child(UIComponents.createTextButton("HUD").margins(Insets.left(8)))
-            child(UIComponents.createTextButton("NEW ").margins(Insets.left(8)))
+            child(UIComponents.createTextButton("PVP", isActive = false).margins(Insets.left(8)))
+            child(UIComponents.createTextButton("HUD", isActive = true).margins(Insets.left(8))) // HUD als aktiv markieren
+            child(UIComponents.createTextButton("NEW", isActive = false).margins(Insets.left(8)))
         }
         return topBar
     }
@@ -100,16 +104,17 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
     private fun createBottomBar(): FlowLayout {
         return Containers.horizontalFlow(Sizing.fill(100), Sizing.fixed(50))
             .apply {
-                surface(Surface.flat(0x33000000))
+                surface(Surface.flat(0x20555555))
                 horizontalAlignment(HorizontalAlignment.CENTER)
                 verticalAlignment(VerticalAlignment.CENTER)
                 padding(Insets.of(8))
 
-                val tabContainer = Containers.horizontalFlow(Sizing.content(), Sizing.content())
+                val tabContainer = Containers.horizontalFlow(Sizing.fill(96), Sizing.content())
                     .apply {
                         horizontalAlignment(HorizontalAlignment.CENTER)
                         verticalAlignment(VerticalAlignment.CENTER)
-                        gap(8)
+                        gap(4)
+                        margins(Insets.horizontal(2))
                     }
 
                 FeatureData.categories.forEach { category ->

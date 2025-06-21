@@ -9,6 +9,8 @@ import net.minecraft.sound.SoundEvents
 import net.minecraft.text.Text
 import tr.s42.mockuimenu.ui.cardanimationmanager.CardAnimationManager
 import tr.s42.mockuimenu.ui.marqueemanager.MarqueeManager
+import kotlin.and
+import kotlin.collections.fill
 
 object UIComponents {
 
@@ -41,22 +43,48 @@ object UIComponents {
             }
     }
 
-    fun createTextButton(text: String, sizing: Sizing = Sizing.fixed(45)): FlowLayout {
+    fun createTextButton(text: String, sizing: Sizing = Sizing.fixed(45), isActive: Boolean = false): FlowLayout {
         return Containers.horizontalFlow(sizing, Sizing.fixed(30))
             .apply {
-                surface(Surface.flat(0x40FFFFFF).and(Surface.outline(0xFFFFFFFF.toInt())))
-                padding(Insets.of(8))
+                surface(
+                    if (isActive) Surface.flat(0x80FFFFFF.toInt()).and(Surface.outline(0xFFFFFFFF.toInt()))
+                    else Surface.flat(0x40FFFFFF).and(Surface.outline(0xFFFFFFFF.toInt()))
+                )
+                padding(Insets.of(4, 8, 2, 8))
                 horizontalAlignment(HorizontalAlignment.CENTER)
-                verticalAlignment(VerticalAlignment.TOP)
+                verticalAlignment(VerticalAlignment.CENTER)
+
+                cursorStyle(CursorStyle.HAND)
+
+                mouseEnter().subscribe {
+                    if (!isActive) {
+                        surface(Surface.flat(0x60FFFFFF).and(Surface.outline(0xFFFFFFFF.toInt())))
+                    }
+                }
+
+                mouseLeave().subscribe {
+                    if (!isActive) {
+                        surface(Surface.flat(0x40FFFFFF).and(Surface.outline(0xFFFFFFFF.toInt())))
+                    }
+                }
+
+                mouseDown().subscribe { _, _, _ ->
+                    MinecraftClient.getInstance().soundManager.play(
+                        net.minecraft.client.sound.PositionedSoundInstance.master(
+                            SoundEvents.UI_BUTTON_CLICK, 1.0f
+                        )
+                    )
+                    true
+                }
 
                 child(
-                    Components.label(Text.literal(text))
+                    Components.label(Text.literal(text).styled { it.withBold(true) })
                         .color(Color.WHITE)
-                        .margins(Insets.top(0))
+                        .margins(Insets.of(0))
+                        .sizing(Sizing.content(), Sizing.content(1.15f.toInt()))
                 )
             }
     }
-
 
     private fun getIcon(icon: String): String {
         return when (icon) {
@@ -201,14 +229,14 @@ object UIComponents {
     }
 
     fun createCategoryTab(text: String, isActive: Boolean = false): FlowLayout {
-        return Containers.horizontalFlow(Sizing.content(), Sizing.fixed(26)) // Höhe reduziert
+        return Containers.horizontalFlow(Sizing.fill(18), Sizing.fixed(26))
             .apply {
                 surface(
                     if (isActive) Surface.flat(0x80FFFFFF.toInt()).and(Surface.outline(0xFFFFFFFF.toInt()))
                     else Surface.flat(0x40FFFFFF).and(Surface.outline(0xFFFFFFFF.toInt()))
                 )
-                padding(Insets.of(4, 8, 4, 8))
-                margins(Insets.horizontal(3))
+                padding(Insets.of(4, 6, 4, 6))
+                margins(Insets.horizontal(1))
                 horizontalAlignment(HorizontalAlignment.CENTER)
                 verticalAlignment(VerticalAlignment.CENTER)
 
@@ -236,9 +264,10 @@ object UIComponents {
                 }
 
                 child(
-                    Components.label(Text.literal(text))
+                    Components.label(Text.literal(text).styled { it.withBold(true) })
                         .color(Color.WHITE)
                         .margins(Insets.top(0))
+                        .sizing(Sizing.content(), Sizing.content())
                 )
             }
     }
