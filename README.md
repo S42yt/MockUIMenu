@@ -10,4 +10,4 @@ Dieses MockUIMenu ist für meine bewerbung beim Norisk Client als Developer
 ## Features
 Klicke B (standart -- kann man in den einstellungen ändern) um das UI zu öffnen. Es öffnet sich ein UI was keine funktion hat nur zum gucken 👀
 
-Klicke F3 + M dann schreib ich (S42_) in den chat deiner welt etwas :D
+Klicke F3 + B damit Hallo NoRisk Client in den chat geschrieben wird
