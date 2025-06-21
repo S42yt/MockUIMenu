@@ -65,18 +65,3 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-tasks.jar {
-    from("LICENSE") {
-        rename { "${it}_${project.base.archivesName.get()}" }
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-        }
-    }
-    repositories {
-    }
-}

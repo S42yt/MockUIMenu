@@ -3,15 +3,15 @@
   "id": "mockuimenu",
   "version": "1.0.0",
   "name": "MockUIMenu",
-  "description": "A mock UI menu",
+  "description": "test mod für norsik client bewerbung",
   "authors": [
     "S42"
   ],
   "contact": {
-    "homepage": "http://s42.site",
+    "homepage": "https://s42.site",
     "sources": ""
   },
-  "license": "",
+  "license": "MIT",
   "icon": "assets/mockuimenu/icon.png",
   "environment": "client",
   "entrypoints": {

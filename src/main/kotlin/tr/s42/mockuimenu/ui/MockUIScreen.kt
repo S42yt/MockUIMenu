@@ -3,9 +3,12 @@ package tr.s42.mockuimenu.ui
 import io.wispforest.owo.ui.base.BaseOwoScreen
 import io.wispforest.owo.ui.container.Containers
 import io.wispforest.owo.ui.container.FlowLayout
+import io.wispforest.owo.ui.container.ScrollContainer
 import io.wispforest.owo.ui.core.*
+import tr.s42.mockuimenu.ui.cardanimationmanager.CardAnimationManager
 import tr.s42.mockuimenu.ui.components.UIComponents
 import tr.s42.mockuimenu.ui.data.FeatureData
+import tr.s42.mockuimenu.ui.marqueemanager.MarqueeManager
 
 class MockUIScreen : BaseOwoScreen<FlowLayout>() {
     override fun createAdapter(): OwoUIAdapter<FlowLayout> {
@@ -18,20 +21,23 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
             .horizontalAlignment(HorizontalAlignment.CENTER)
             .verticalAlignment(VerticalAlignment.CENTER)
 
-        val menuContainer = Containers.verticalFlow(Sizing.fill(85), Sizing.fill(80)) 
+        val menuContainer = Containers.verticalFlow(Sizing.fill(55), Sizing.fill(80))
             .apply {
-                surface(Surface.flat(0x00000000)) 
-                padding(Insets.of(0))
+                surface(Surface.flat(0x00000000))
+                padding(Insets.of(2))
             }
 
         val topBar = createTopBar()
         menuContainer.child(topBar)
 
         val gridContainer = createMainGrid()
+
         val scrollContainer = Containers.verticalScroll(Sizing.fill(100), Sizing.fill(70), gridContainer)
             .apply {
-                surface(Surface.flat(0x30000000.toInt())) 
-                padding(Insets.of(20)) 
+                surface(Surface.flat(0x00000000))
+                padding(Insets.of(5))
+                scrollbar(ScrollContainer.Scrollbar.flat(Color.ofArgb(0xCCFFFFFF.toInt())))
+                margins(Insets.vertical(5))
             }
         menuContainer.child(scrollContainer)
 
@@ -42,38 +48,11 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
         rootComponent.child(menuContainer)
     }
 
-    private fun createTopBar(): FlowLayout {
-        val topBar = Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
-            .apply {
-                surface(Surface.flat(0x60000000.toInt())) 
-                padding(Insets.of(20)) 
-                verticalAlignment(VerticalAlignment.CENTER)
-            }
-        
-        topBar.apply {
-            
-            child(UIComponents.createSearchBar(Sizing.fill(50)))
-            
-            
-            child(Containers.horizontalFlow(Sizing.fill(10), Sizing.content()))
-            
-            
-            child(UIComponents.createIconButton("☰"))
-            child(UIComponents.createTextButton("PVP").margins(Insets.left(8)))
-            child(UIComponents.createTextButton("HUD").margins(Insets.left(8)))
-            
-            child(
-                UIComponents.createNewBadge("NEW 🔔")
-                    .margins(Insets.left(8))
-            )
-        }
-        return topBar
-    }
-
     private fun createMainGrid(): FlowLayout {
         val gridContainer = Containers.verticalFlow(Sizing.fill(100), Sizing.content())
             .apply {
-                padding(Insets.of(15)) 
+                surface(Surface.flat(0x70FFFFFF))
+                padding(Insets.of(10))
             }
 
         FeatureData.allFeatures.forEach { rowItems ->
@@ -88,7 +67,7 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
         val row = Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
             .apply {
                 horizontalAlignment(HorizontalAlignment.CENTER)
-                margins(Insets.bottom(20)) 
+                margins(Insets.bottom(20))
             }
 
         items.forEach { item ->
@@ -99,17 +78,45 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
         return row
     }
 
-    private fun createBottomBar(): FlowLayout {
-        return Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
+    private fun createTopBar(): FlowLayout {
+        val topBar = Containers.horizontalFlow(Sizing.fill(100), Sizing.content())
             .apply {
-                surface(Surface.flat(0x60000000.toInt())) 
+                surface(Surface.flat(0x33000000))
+                padding(Insets.of(15))
+                verticalAlignment(VerticalAlignment.CENTER)
+            }
+
+        topBar.apply {
+            child(UIComponents.createSearchBar(Sizing.fill(50)))
+            child(Containers.horizontalFlow(Sizing.fill(10), Sizing.content()))
+            child(UIComponents.createIconButton("☰"))
+            child(UIComponents.createTextButton("PVP").margins(Insets.left(8)))
+            child(UIComponents.createTextButton("HUD").margins(Insets.left(8)))
+            child(UIComponents.createTextButton("NEW ").margins(Insets.left(8)))
+        }
+        return topBar
+    }
+
+    private fun createBottomBar(): FlowLayout {
+        return Containers.horizontalFlow(Sizing.fill(100), Sizing.fixed(50))
+            .apply {
+                surface(Surface.flat(0x33000000))
                 horizontalAlignment(HorizontalAlignment.CENTER)
-                padding(Insets.of(20))
+                verticalAlignment(VerticalAlignment.CENTER)
+                padding(Insets.of(8))
+
+                val tabContainer = Containers.horizontalFlow(Sizing.content(), Sizing.content())
+                    .apply {
+                        horizontalAlignment(HorizontalAlignment.CENTER)
+                        verticalAlignment(VerticalAlignment.CENTER)
+                        gap(8)
+                    }
 
                 FeatureData.categories.forEach { category ->
-                    val isActive = category == "FRIENDS"
-                    child(UIComponents.createCategoryTab(category, isActive))
+                    val isActive = category == "NRC+"
+                    tabContainer.child(UIComponents.createCategoryTab(category, isActive))
                 }
+                child(tabContainer)
             }
     }
 
@@ -122,4 +129,10 @@ class MockUIScreen : BaseOwoScreen<FlowLayout>() {
     }
 
     override fun shouldPause(): Boolean = false
+
+    override fun removed() {
+        super.removed()
+        MarqueeManager.unregisterAll()
+        CardAnimationManager.unregisterAll()
+    }
 }

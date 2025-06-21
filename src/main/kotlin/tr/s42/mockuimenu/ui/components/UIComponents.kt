@@ -7,118 +7,112 @@ import io.wispforest.owo.ui.core.*
 import net.minecraft.client.MinecraftClient
 import net.minecraft.sound.SoundEvents
 import net.minecraft.text.Text
-import java.time.Duration
-
+import tr.s42.mockuimenu.ui.cardanimationmanager.CardAnimationManager
+import tr.s42.mockuimenu.ui.marqueemanager.MarqueeManager
 
 object UIComponents {
-    
+
     fun createSearchBar(width: Sizing): FlowLayout {
         return Containers.horizontalFlow(width, Sizing.fixed(30))
             .apply {
-                surface(Surface.flat(0x40000000))
-                padding(Insets.of(6))
-                child(
-                    Components.label(Text.literal("🔍 Type to search..."))
-                        .color(Color.WHITE)
-                )
-                verticalAlignment(VerticalAlignment.CENTER)
-            }
+            surface(Surface.flat(0x33000000))
+            padding(Insets.of(6))
+            child(
+                Components.label(Text.literal("🔍 Type to search..."))
+                    .color(Color.WHITE)
+            )
+            verticalAlignment(VerticalAlignment.CENTER)
+        }
     }
-    
+
     fun createIconButton(icon: String, sizing: Sizing = Sizing.fixed(35)): FlowLayout {
         return Containers.horizontalFlow(sizing, Sizing.fixed(30))
             .apply {
-                surface(Surface.flat(0x50000000))
-                padding(Insets.of(6))
+                surface(Surface.flat(0x40FFFFFF).and(Surface.outline(0xFFFFFFFF.toInt())))
+                padding(Insets.of(8))
                 horizontalAlignment(HorizontalAlignment.CENTER)
-                verticalAlignment(VerticalAlignment.CENTER)
-                
+                verticalAlignment(VerticalAlignment.TOP)
+
                 child(
                     Components.label(Text.literal(icon))
                         .color(Color.WHITE)
+                        .margins(Insets.top(0))
                 )
             }
     }
-    
+
     fun createTextButton(text: String, sizing: Sizing = Sizing.fixed(45)): FlowLayout {
         return Containers.horizontalFlow(sizing, Sizing.fixed(30))
             .apply {
-                surface(Surface.flat(0x50000000))
-                padding(Insets.of(6))
+                surface(Surface.flat(0x40FFFFFF).and(Surface.outline(0xFFFFFFFF.toInt())))
+                padding(Insets.of(8))
                 horizontalAlignment(HorizontalAlignment.CENTER)
-                verticalAlignment(VerticalAlignment.CENTER)
-                
+                verticalAlignment(VerticalAlignment.TOP)
+
                 child(
                     Components.label(Text.literal(text))
                         .color(Color.WHITE)
+                        .margins(Insets.top(0))
                 )
             }
     }
-    
-    fun createNewBadge(text: String): FlowLayout {
-        return Containers.horizontalFlow(Sizing.content(), Sizing.content())
-            .apply {
-                surface(Surface.flat(0xC0ADD8E6.toInt()))
-                padding(Insets.of(2, 4, 2, 4))
-                horizontalAlignment(HorizontalAlignment.CENTER)
-                verticalAlignment(VerticalAlignment.CENTER)
-                
-                child(
-                    Components.label(Text.literal(text))
-                        .color(Color.WHITE)
-                )
-            }
-    }
-    
-    
-    private fun getBigIcon(icon: String): String {
+
+
+    private fun getIcon(icon: String): String {
         return when (icon) {
-            "💎" -> "◆" 
-            "⚔" -> "⚔" 
-            "🛡" -> "🛡" 
-            "👤" -> "👤" 
-            "💬" -> "💬" 
-            "🗨" -> "💭" 
-            "📡" -> "📡" 
-            "🏷" -> "🏷" 
-            "📝" -> "📝" 
-            "🔄" -> "🔄" 
-            "📊" -> "📊" 
-            "📶" -> "📶" 
-            "📦" -> "📦" 
-            "⏰" -> "⏰" 
-            "🎯" -> "🎯" 
-            "📐" -> "📐" 
-            "☀" -> "☀" 
-            "🏆" -> "🏆" 
-            "📷" -> "📷" 
-            "📍" -> "📍" 
-            "🔍" -> "🔍" 
-            "👁" -> "👁" 
-            "🌫" -> "🌫" 
-            "📏" -> "📏" 
-            "⚡" -> "⚡" 
-            "🔧" -> "🔧" 
+            "💎" -> "◆"
+            "⚔" -> "⚔"
+            "🛡" -> "🛡"
+            "👤" -> "👤"
+            "💬" -> "💬"
+            "🗨" -> "💭"
+            "📡" -> "📡"
+            "🏷" -> "🏷"
+            "📝" -> "📝"
+            "🔄" -> "🔄"
+            "📊" -> "📊"
+            "📶" -> "📶"
+            "📦" -> "📦"
+            "⏰" -> "⏰"
+            "🎯" -> "🎯"
+            "📐" -> "📐"
+            "☀" -> "☀"
+            "🏆" -> "🏆"
+            "📷" -> "📷"
+            "📍" -> "📍"
+            "🔍" -> "🔍"
+            "👁" -> "👁"
+            "🌫" -> "🌫"
+            "📏" -> "📏"
+            "⚡" -> "⚡"
+            "🔧" -> "🔧"
             else -> icon
         }
     }
-    
+
     fun createFeatureCard(icon: String, title: String, isNew: Boolean = false): FlowLayout {
-        val card = Containers.verticalFlow(Sizing.fill(22), Sizing.fixed(140))
+        val originalSize = 100
+        val hoverSize = 125
+
+        val card = Containers.verticalFlow(Sizing.fixed(originalSize), Sizing.fixed(originalSize))
             .apply {
-                surface(Surface.flat(0x60FFFFFF.toInt()))
-                padding(Insets.of(12))
+                surface(Surface.flat(0x40FFFFFF))
+                padding(Insets.of(10))
                 margins(Insets.of(4))
                 horizontalAlignment(HorizontalAlignment.CENTER)
                 verticalAlignment(VerticalAlignment.CENTER)
                 cursorStyle(CursorStyle.HAND)
-                
+
+                CardAnimationManager.registerCard(this, originalSize, hoverSize)
+
                 mouseEnter().subscribe {
-                    surface(Surface.flat(0x80FFFFFF.toInt()))
+                    surface(Surface.flat(0x60FFFFFF))
+                    CardAnimationManager.setHoverState(this, true)
                 }
 
                 mouseLeave().subscribe {
-                    surface(Surface.flat(0x60FFFFFF.toInt()))
+                    surface(Surface.flat(0x40FFFFFF))
+                    CardAnimationManager.setHoverState(this, false)
                 }
 
                 mouseDown().subscribe { _, _, _ ->
@@ -131,65 +125,107 @@ object UIComponents {
                 }
             }
 
-        val contentContainer = Containers.verticalFlow(Sizing.fill(100), Sizing.fill(100))
+        val iconContainer = Containers.verticalFlow(Sizing.fill(100), Sizing.fill(70))
             .apply {
                 horizontalAlignment(HorizontalAlignment.CENTER)
                 verticalAlignment(VerticalAlignment.CENTER)
-                gap(4)
             }
 
-        val bigIcon = getBigIcon(icon)
-        contentContainer.child(
-            Components.label(Text.literal(bigIcon))
+        val iconText = getIcon(icon)
+        iconContainer.child(
+            Components.label(Text.literal(iconText))
                 .apply {
-                    margins(Insets.bottom(8))
                     horizontalTextAlignment(HorizontalAlignment.CENTER)
                     verticalTextAlignment(VerticalAlignment.CENTER)
-                    sizing(Sizing.fixed(90), Sizing.fixed(90))
+                    sizing(Sizing.fixed(60), Sizing.fixed(60))
                     shadow(true)
-                }
-        )
-
-        contentContainer.child(
-            Components.label(Text.literal(title))
-                .apply {
                     color(Color.WHITE)
-                    horizontalTextAlignment(HorizontalAlignment.CENTER)
-                    margins(Insets.top(4))
-                    shadow(true)
                 }
         )
 
-        card.child(contentContainer)
-        return card
-    }
-    
-    fun createCategoryTab(text: String, isActive: Boolean = false): FlowLayout {
-        return Containers.horizontalFlow(Sizing.fill(18), Sizing.fixed(30))
+        val titleContainer = Containers.verticalFlow(Sizing.fill(100), Sizing.fill(30))
             .apply {
-                surface(
-                    if (isActive) Surface.flat(0x609370DB.toInt()) 
-                    else Surface.flat(0x40000000)
-                )
-                padding(Insets.of(6))
-                margins(Insets.horizontal(2))
                 horizontalAlignment(HorizontalAlignment.CENTER)
                 verticalAlignment(VerticalAlignment.CENTER)
-                
+                surface(Surface.flat(0x40000000))
+                zIndex(100)
+            }
+
+        val maxTitleLength = 11
+        val titleLabel = Components.label(Text.literal(
+            if (title.length <= maxTitleLength) title else title.take(maxTitleLength)
+        ).styled { it.withBold(true) })
+            .apply {
+                horizontalTextAlignment(HorizontalAlignment.CENTER)
+                color(Color.WHITE)
+                shadow(true)
+            }
+
+        if (title.length > maxTitleLength) {
+            MarqueeManager.registerLabel(titleLabel, title, maxTitleLength)
+
+            card.mouseEnter().subscribe {
+                MarqueeManager.startAnimation(titleLabel)
+            }
+
+            card.mouseLeave().subscribe {
+                MarqueeManager.stopAnimation(titleLabel)
+            }
+        }
+
+        titleContainer.child(titleLabel)
+        card.child(iconContainer)
+        card.child(titleContainer)
+
+        if (isNew) {
+            val newLabel = Components.label(Text.literal("NEW").styled { it.withBold(true) })
+                .apply {
+                    color(Color.ofRgb(0xFFFFFF))
+                    shadow(true)
+                    zIndex(200)
+                }
+
+            val newLabelContainer = Containers.verticalFlow(Sizing.fixed(28), Sizing.fixed(10))
+                .apply {
+                    child(newLabel)
+                    horizontalAlignment(HorizontalAlignment.CENTER)
+                    verticalAlignment(VerticalAlignment.CENTER)
+                    margins(Insets.of(5))
+                    positioning(Positioning.absolute(50, 1))
+                    zIndex(200)
+                }
+
+            card.child(newLabelContainer)
+        }
+        return card
+    }
+
+    fun createCategoryTab(text: String, isActive: Boolean = false): FlowLayout {
+        return Containers.horizontalFlow(Sizing.content(), Sizing.fixed(26)) // Höhe reduziert
+            .apply {
+                surface(
+                    if (isActive) Surface.flat(0x80FFFFFF.toInt()).and(Surface.outline(0xFFFFFFFF.toInt()))
+                    else Surface.flat(0x40FFFFFF).and(Surface.outline(0xFFFFFFFF.toInt()))
+                )
+                padding(Insets.of(4, 8, 4, 8))
+                margins(Insets.horizontal(3))
+                horizontalAlignment(HorizontalAlignment.CENTER)
+                verticalAlignment(VerticalAlignment.CENTER)
+
                 cursorStyle(CursorStyle.HAND)
-                
+
                 mouseEnter().subscribe {
                     if (!isActive) {
-                        surface(Surface.flat(0x309370DB.toInt()))
+                        surface(Surface.flat(0x60FFFFFF).and(Surface.outline(0xFFFFFFFF.toInt())))
                     }
                 }
-                
+
                 mouseLeave().subscribe {
                     if (!isActive) {
-                        surface(Surface.flat(0x40000000))
+                        surface(Surface.flat(0x40FFFFFF).and(Surface.outline(0xFFFFFFFF.toInt())))
                     }
                 }
-                
+
                 mouseDown().subscribe { _, _, _ ->
                     MinecraftClient.getInstance().soundManager.play(
                         net.minecraft.client.sound.PositionedSoundInstance.master(
@@ -198,10 +234,11 @@ object UIComponents {
                     )
                     true
                 }
-                
+
                 child(
                     Components.label(Text.literal(text))
                         .color(Color.WHITE)
+                        .margins(Insets.top(0))
                 )
             }
     }
